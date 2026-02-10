@@ -8,6 +8,12 @@ import java.util.List;
 
 public interface ProductCachePort {
     Flux<Product> findTopMostCheaper();
-    Mono<Void> saveTopMostCheaper(List<Product> products);
-}
 
+    Mono<Void> saveTopMostCheaper(List<Product> products);
+
+    Mono<Void> save(Product product);
+
+    Mono<Boolean> delete(Long id);
+
+    Mono<Product> findById(Long id);
+}

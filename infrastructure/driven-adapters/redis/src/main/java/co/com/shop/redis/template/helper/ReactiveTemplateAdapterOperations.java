@@ -66,6 +66,10 @@ public abstract class ReactiveTemplateAdapterOperations<E, K, V> {
                 .then();
     }
 
+    protected Mono<Long> delete(K key) {
+        return template.delete(key);
+    }
+
 
     protected V toValue(E entity) {
         return mapper.map(entity, dataClass);

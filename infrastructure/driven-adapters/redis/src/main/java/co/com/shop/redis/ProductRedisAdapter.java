@@ -19,6 +19,8 @@ public class ProductRedisAdapter
         implements ProductCachePort {
 
     private static final String CACHE_KEY = "top_products";
+    private static final String PRODUCT_PREFIX = "product:";
+    private static final Long DEFAULT_TTL = Duration.ofMinutes(5).toMillis();
 
     public ProductRedisAdapter(ReactiveRedisConnectionFactory factory, ObjectMapper mapper) {
         super(factory, mapper, d -> d);
@@ -31,7 +33,22 @@ public class ProductRedisAdapter
 
     @Override
     public Mono<Void> saveTopMostCheaper(List<Product> products) {
-        return saveList(CACHE_KEY, products, Duration.ofSeconds(20));
+        return saveList(CACHE_KEY, products, Duration.ofSeconds(40));
     }
-}
 
+    @Override
+    public Mono<Void> save(Product product) {
+        return save(PRODUCT_PREFIX + product.getId(), product, DEFAULT_TTL).then();
+    }
+
+    @Override
+    public Mono<Boolean> delete(Long id) {
+        return delete(PRODUCT_PREFIX + id).hasElement();
+    }
+
+    @Override
+    public Mono<Product> findById(Long id) {
+        return findById(PRODUCT_PREFIX + id);
+    }
+
+}
